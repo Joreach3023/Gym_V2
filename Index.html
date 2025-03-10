@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi de Progression Gym</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+            width: 200px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .chart-container {
+            margin-top: 30px;
+            height: 300px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background-color: #ddd;
+            border: none;
+            cursor: pointer;
+            flex-grow: 1;
+            text-align: center;
+        }
+        .tab.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <h1>Suivi de Progression Gym</h1>
+    
+    <div class="tabs">
+        <button class="tab active" onclick="openTab(event, 'addEntry')">Ajouter un exercice</button>
+        <button class="tab" onclick="openTab(event, 'viewProgress')">Voir progression</button>
+        <button class="tab" onclick="openTab(event, 'manageExercises')">Gérer exercices</button>
+    </div>
+    
+    <div id="addEntry" class="tab-content active container">
+        <h2>Ajouter une entrée</h2>
+        <form id="workout-form">
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="exercise">Exercice:</label>
+                <select id="exercise" required>
+                    <option value="">Sélectionnez un exercice</option>
+                    <optgroup label="Poitrine">
+                        <option value="bench-press">Développé couché</option>
+                        <option value="incline-press">Développé incliné</option>
+                        <option value="decline-press">Développé décliné</option>
+                        <option value="chest-fly">Écartés (Fly)</option>
+                        <option value="push-up">Pompes</option>
+                    </optgroup>
+                    <optgroup label="Dos">
+                        <option value="pull-up">Tractions</option>
+                        <option value="lat-pulldown">Tirage vertical</option>
+                        <option value="row">Rowing</option>
+                        <option value="deadlift">Soulevé de terre</option>
+                    </optgroup>
+                    <optgroup label="Jambes">
+                        <option value="squat">Squat</option>
+                        <option value="leg-press">Presse à cuisses</option>
+                        <option value="leg-extension">Extension des jambes</option>
+                        <option value="leg-curl">Curl des jambes</option>
+                        <option value="calf-raise">Mollets</option>
+                    </optgroup>
+                    <optgroup label="Épaules">
+                        <option value="shoulder-press">Développé épaules</option>
+                        <option value="lateral-raise">Élévations latérales</option>
+                        <option value="front-raise">Élévations frontales</option>
+                        <option value="rear-delt-fly">Oiseaux arrière</option>
+                    </optgroup>
+                    <optgroup label="Bras">
+                        <option value="bicep-curl">Curl biceps</option>
+                        <option value="tricep-extension">Extension triceps</option>
+                        <option value="hammer-curl">Curl marteau</option>
+                        <option value="dips">Dips</option>
+                    </optgroup>
+                    <optgroup label="Abdominaux">
+                        <option value="crunch">Crunch</option>
+                        <option value="leg-raise">Relevé de jambes</option>
+                        <option value="plank">Planche</option>
+                    </optgroup>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="weight">Poids (lbs):</label>
+                <input type="number" id="weight" min="0" step="2.5" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="sets">Séries:</label>
+                <input type="number" id="sets" min="1" value="3" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="reps">Répétitions:</label>
+                <input type="number" id="reps" min="1" value="10" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="notes">Notes:</label>
+                <input type="text" id="notes" placeholder="Notes supplémentaires...">
+            </div>
+            
+            <button type="submit">Enregistrer</button>
+        </form>
+    </div>
+    
+    <div id="viewProgress" class="tab-content container">
+        <h2>Progression</h2>
+        
+        <div class="form-group">
+            <label for="exercise-filter">Sélectionner un exercice:</label>
+            <select id="exercise-filter">
+                <option value="">Tous les exercices</option>
+                <!-- Rempli dynamiquement -->
+            </select>
+        </div>
+        
+        <div id="progress-chart" class="chart-container"></div>
+        
+        <table id="progress-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Exercice</th>
+                    <th>Poids (lbs)</th>
+                    <th>Séries</th>
+                    <th>Répétitions</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="progress-data">
+                <!-- Données ajoutées dynamiquement -->
+            </tbody>
+        </table>
+    </div>
+    
+    <div id="manageExercises" class="tab-content container">
+        <h2>Gérer les exercices</h2>
+        
+        <div class="form-group">
+            <label for="new-exercise">Nouvel exercice:</label>
+            <input type="text" id="new-exercise" placeholder="Nom de l'exercice">
+        </div>
+        
+        <div class="form-group">
+            <label for="exercise-category">Catégorie:</label>
+            <select id="exercise-category">
+                <option value="chest">Poitrine</option>
+                <option value="back">Dos</option>
+                <option value="legs">Jambes</option>
+                <option value="shoulders">Épaules</option>
+                <option value="arms">Bras</option>
+                <option value="abs">Abdominaux</option>
+                <option value="other">Autre</option>
+            </select>
+        </div>
+        
+        <button id="add-exercise-btn">Ajouter exercice</button>
+        
+        <h3>Exercices personnalisés</h3>
+        <ul id="custom-exercises">
+            <!-- Rempli dynamiquement -->
+        </ul>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        // Initialisation de l'application
+        let workouts = JSON.parse(localStorage.getItem('workouts')) || [];
+        let customExercises = JSON.parse(localStorage.getItem('customExercises')) || [];
+        let chart = null;
+        
+        // Définir la date d'aujourd'hui par défaut
+        document.getElementById('date').valueAsDate = new Date();
+        
+        // Gérer le formulaire d'ajout d'exercice
+        document.getElementById('workout-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const workout = {
+                id: Date.now(),
+                date: document.getElementById('date').value,
+                exercise: document.getElementById('exercise').value,
+                exerciseName: document.getElementById('exercise').options[document.getElementById('exercise').selectedIndex].text,
+                weight: parseFloat(document.getElementById('weight').value),
+                sets: parseInt(document.getElementById('sets').value),
+                reps: parseInt(document.getElementById('reps').value),
+                notes: document.getElementById('notes').value
+            };
+            
+            workouts.push(workout);
+            saveWorkouts();
+            this.reset();
+            document.getElementById('date').valueAsDate = new Date();
+            alert('Exercice enregistré avec succès!');
+        });
+        
+        // Gérer l'ajout d'exercices personnalisés
+        document.getElementById('add-exercise-btn').addEventListener('click', function() {
+            const exerciseName = document.getElementById('new-exercise').value.trim();
+            const category = document.getElementById('exercise-category').value;
+            
+            if (exerciseName === '') {
+                alert('Veuillez entrer un nom d\'exercice');
+                return;
+            }
+            
+            const exercise = {
+                id: Date.now(),
+                name: exerciseName,
+                category: category,
+                value: exerciseName.toLowerCase().replace(/\s+/g, '-')
+            };
+            
+            customExercises.push(exercise);
+            saveCustomExercises();
+            updateExerciseList();
+            document.getElementById('new-exercise').value = '';
+            updateCustomExercisesList();
+            alert('Exercice ajouté avec succès!');
+        });
+        
+        // Navigation par onglets
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+            
+            if (tabName === 'viewProgress') {
+                updateProgressView();
+            } else if (tabName === 'manageExercises') {
+                updateCustomExercisesList();
+            }
+        }
+        
+        // Mettre à jour les exercices dans la liste déroulante
+        function updateExerciseList() {
+            const exerciseSelect = document.getElementById('exercise');
+            const exerciseFilter = document.getElementById('exercise-filter');
+            
+            // Ajouter les exercices personnalisés au select d'exercices principal
+            customExercises.forEach(exercise => {
+                const existingOption = Array.from(exerciseSelect.options).find(option => option.value === exercise.value);
+                if (!existingOption) {
+                    let group = Array.from(exerciseSelect.getElementsByTagName('optgroup')).find(g => g.label === getCategoryLabel(exercise.category));
+                    
+                    if (!group) {
+                        group = document.createElement('optgroup');
+                        group.label = getCategoryLabel(exercise.category);
+                        exerciseSelect.appendChild(group);
+                    }
+                    
+                    const option = document.createElement('option');
+                    option.value = exercise.value;
+                    option.textContent = exercise.name;
+                    group.appendChild(option);
+                }
+            });
+            
+            // Mettre à jour le filtre d'exercices
+            exerciseFilter.innerHTML = '<option value="">Tous les exercices</option>';
+            
+            // Obtenir la liste de tous les exercices utilisés
+            const usedExercises = [...new Set(workouts.map(w => w.exercise))];
+            
+            usedExercises.forEach(exerciseValue => {
+                let exerciseName = '';
+                
+                // Chercher dans les options du select principal
+                const option = Array.from(exerciseSelect.options).find(opt => opt.value === exerciseValue);
+                if (option) {
+                    exerciseName = option.textContent;
+                } else {
+                    // Si non trouvé, vérifier dans les exercices personnalisés
+                    const customExercise = customExercises.find(ce => ce.value === exerciseValue);
+                    if (customExercise) {
+                        exerciseName = customExercise.name;
+                    } else {
+                        exerciseName = exerciseValue;
+                    }
+                }
+                
+                const filterOption = document.createElement('option');
+                filterOption.value = exerciseValue;
+                filterOption.textContent = exerciseName;
+                exerciseFilter.appendChild(filterOption);
+            });
+        }
+        
+        // Obtenir le label de catégorie
+        function getCategoryLabel(category) {
+            const categoryLabels = {
+                'chest': 'Poitrine',
+                'back': 'Dos',
+                'legs': 'Jambes',
+                'shoulders': 'Épaules',
+                'arms': 'Bras',
+                'abs': 'Abdominaux',
+                'other': 'Autre'
+            };
+            
+            return categoryLabels[category] || 'Autre';
+        }
+        
+        // Mettre à jour la liste des exercices personnalisés
+        function updateCustomExercisesList() {
+            const customExercisesList = document.getElementById('custom-exercises');
+            customExercisesList.innerHTML = '';
+            
+            customExercises.forEach(exercise => {
+                const li = document.createElement('li');
+                li.textContent = `${exercise.name} (${getCategoryLabel(exercise.category)})`;
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Supprimer';
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.style.marginLeft = '10px';
+                deleteBtn.addEventListener('click', function() {
+                    if (confirm(`Êtes-vous sûr de vouloir supprimer l'exercice "${exercise.name}" ?`)) {
+                        customExercises = customExercises.filter(e => e.id !== exercise.id);
+                        saveCustomExercises();
+                        updateCustomExercisesList();
+                        updateExerciseList();
+                    }
+                });
+                
+                li.appendChild(deleteBtn);
+                customExercisesList.appendChild(li);
+            });
+        }
+        
+        // Mettre à jour la vue de progression
+        function updateProgressView() {
+            const exerciseFilter = document.getElementById('exercise-filter').value;
+            const progressData = document.getElementById('progress-data');
+            
+            // Filtrer les séances d'entraînement
+            let filteredWorkouts = workouts;
+            if (exerciseFilter) {
+                filteredWorkouts = workouts.filter(w => w.exercise === exerciseFilter);
+            }
+            
+            // Trier par date (plus récent au plus ancien)
+            filteredWorkouts.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Afficher les données dans le tableau
+            progressData.innerHTML = '';
+            
+            filteredWorkouts.forEach(workout => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${formatDate(workout.date)}</td>
+                    <td>${workout.exerciseName}</td>
+                    <td>${workout.weight}</td>
+                    <td>${workout.sets}</td>
+                    <td>${workout.reps}</td>
+                    <td>${workout.notes}</td>
+                    <td>
+                        <button class="delete-btn" data-id="${workout.id}">Supprimer</button>
+                    </td>
+                `;
+                
+                progressData.appendChild(row);
+            });
+            
+            // Ajouter des écouteurs d'événements pour les boutons de suppression
+            document.querySelectorAll('.delete-btn[data-id]').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    if (confirm('Êtes-vous sûr de vouloir supprimer cette entrée ?')) {
+                        workouts = workouts.filter(w => w.id !== id);
+                        saveWorkouts();
+                        updateProgressView();
+                    }
+                });
+            });
+            
+            // Mettre à jour le graphique
+            updateChart();
+        }
+        
+        // Mettre à jour le graphique
+        function updateChart() {
+            const exerciseFilter = document.getElementById('exercise-filter').value;
+            const chartContainer = document.getElementById('progress-chart');
+            
+            // Si aucun exercice n'est sélectionné, ne pas afficher de graphique
+            if (!exerciseFilter) {
+                chartContainer.innerHTML = '<p style="text-align: center; padding: 50px 0;">Sélectionnez un exercice pour voir sa progression</p>';
+                return;
+            }
+            
+            // Filtrer les données pour l'exercice sélectionné
+            const exerciseData = workouts
+                .filter(w => w.exercise === exerciseFilter)
+                .sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            if (exerciseData.length === 0) {
+                chartContainer.innerHTML = '<p style="text-align: center; padding: 50px 0;">Aucune donnée disponible pour cet exercice</p>';
+                return;
+            }
+            
+            // Préparer les données pour le graphique
+            const labels = exerciseData.map(d => formatDate(d.date));
+            const weights = exerciseData.map(d => d.weight);
+            
+            // Créer le canvas s'il n'existe pas
+            if (!document.getElementById('progress-chart-canvas')) {
+                chartContainer.innerHTML = '<canvas id="progress-chart-canvas"></canvas>';
+            }
+            
+            // Détruire le graphique existant s'il y en a un
+            if (chart) {
+                chart.destroy();
+            }
+            
+            // Créer le nouveau graphique
+            const ctx = document.getElementById('progress-chart-canvas').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Poids (lbs)',
+                        data: weights,
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                        tension: 0.1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Poids (lbs)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Progression: ${document.getElementById('exercise-filter').options[document.getElementById('exercise-filter').selectedIndex].text}`
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Formater la date
+        function formatDate(dateString) {
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            return new Date(dateString).toLocaleDateString('fr-FR', options);
+        }
+        
+        // Sauvegarder les données dans le localStorage
+        function saveWorkouts() {
+            localStorage.setItem('workouts', JSON.stringify(workouts));
+        }
+        
+        function saveCustomExercises() {
+            localStorage.setItem('customExercises', JSON.stringify(customExercises));
+        }
+        
+        // Initialiser l'application
+        updateExerciseList();
+        
+        // Ajouter un écouteur d'événements pour le filtre d'exercices
+        document.getElementById('exercise-filter').addEventListener('change', updateProgressView);
+    </script>
+</body>
+</html>
