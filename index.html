@@ -4,149 +4,442 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suivi de Progression Gym</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
+        :root {
+            --primary-color: #4CAF50;
+            --primary-dark: #45a049;
+            --danger-color: #f44336;
+            --danger-dark: #d32f2f;
+            --bg-light: #f5f5f5;
+            --text-color: #333;
+            --border-color: #ddd;
+        }
+        
+        * {
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             max-width: 100%;
             margin: 0 auto;
             padding: 10px;
-            background-color: #f5f5f5;
+            background-color: var(--bg-light);
+            color: var(--text-color);
         }
+        
         h1, h2 {
-            color: #333;
+            color: var(--text-color);
             text-align: center;
         }
+        
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        h1 i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
         .container {
             background-color: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
             overflow: hidden;
+            animation: fadeIn 0.5s ease;
         }
+        
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
+        
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
         }
+        
+        label i {
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+        
         select, input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             box-sizing: border-box;
-            font-size: 16px; /* Meilleure taille pour mobile */
+            font-size: 16px;
+            background-color: white;
         }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+        
         button {
-            background-color: #4CAF50;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 12px 15px;
-            border-radius: 4px;
+            padding: 14px 18px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            display: block;
-            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 25px auto;
             width: 100%;
             max-width: 200px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
         }
+        
+        button i {
+            margin-right: 8px;
+        }
+        
         button:hover {
-            background-color: #45a049;
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            overflow: hidden;
         }
+        
         .table-container {
             overflow-x: auto;
             width: 100%;
+            margin-top: 20px;
+            border-radius: 8px;
         }
+        
         th, td {
-            border: 1px solid #ddd;
-            padding: 10px 8px;
+            border: 1px solid var(--border-color);
+            padding: 12px 10px;
             text-align: center;
-            min-width: 60px; /* Assure une largeur minimale des cellules */
+            min-width: 80px;
         }
+        
         th {
             background-color: #f2f2f2;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
         }
+        
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
+        
+        tr:hover {
+            background-color: #f0f8f0;
+        }
+        
         .chart-container {
             position: relative;
-            height: 300px;
+            height: 350px;
             width: 100%;
-            margin: 20px auto;
+            margin: 25px auto;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            background-color: white;
         }
+        
         .tabs {
             display: flex;
-            margin-bottom: 15px;
-            overflow-x: auto; /* Pour petits écrans */
+            margin-bottom: 20px;
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
         }
+        
         .tab {
-            padding: 10px;
-            background-color: #ddd;
+            padding: 12px 15px;
+            background-color: #f0f0f0;
             border: none;
             cursor: pointer;
             flex-grow: 1;
             text-align: center;
-            white-space: nowrap; /* Évite le retour à la ligne */
-            min-width: 100px; /* Largeur minimale */
+            white-space: nowrap;
+            min-width: 120px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        
+        .tab i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
         .tab.active {
-            background-color: #4CAF50;
+            background-color: var(--primary-color);
             color: white;
         }
+        
+        .tab:hover:not(.active) {
+            background-color: #e0e0e0;
+        }
+        
         .tab-content {
             display: none;
         }
+        
         .tab-content.active {
             display: block;
+            animation: fadeIn 0.5s ease;
         }
+        
         .delete-btn {
-            background-color: #f44336;
+            background-color: var(--danger-color);
             color: white;
             border: none;
             padding: 8px 10px;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            width: auto;
+            min-width: 36px;
         }
+        
         .delete-btn:hover {
-            background-color: #d32f2f;
+            background-color: var(--danger-dark);
         }
+        
         #chart-message {
             text-align: center;
-            padding: 20px;
+            padding: 40px 20px;
             background-color: #f9f9f9;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #666;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        
+        #chart-message i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+        
+        .custom-exercise-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f9f9f9;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .custom-exercise-item:hover {
+            background-color: #f0f8f0;
+        }
+        
+        .exercise-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .exercise-icon {
+            width: 36px;
+            height: 36px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+        
+        .category-badge {
+            background-color: #e0e0e0;
+            color: #666;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                border-radius: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            button {
+                max-width: 100%;
+            }
+            
+            th, td {
+                padding: 10px 6px;
+                font-size: 0.9rem;
+            }
+            
+            .tab {
+                min-width: 100px;
+                padding: 10px;
+            }
+            
+            .custom-exercise-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .exercise-actions {
+                margin-top: 10px;
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px;
+            }
+            
+            label, select, input, button {
+                font-size: 0.95rem;
+            }
+            
+            .tabs {
+                flex-wrap: nowrap;
+            }
+            
+            .tab {
+                flex: 1 0 auto;
+                font-size: 0.85rem;
+                padding: 10px 8px;
+            }
+            
+            .tab i {
+                margin-right: 5px;
+            }
+            
+            th, td {
+                padding: 8px 5px;
+                font-size: 0.85rem;
+                min-width: 60px;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse-animation {
+            animation: pulse 0.6s ease-in-out;
+        }
+        
+        .success-message {
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .success-message i {
+            margin-right: 10px;
+        }
+        
+        .close-message {
+            cursor: pointer;
+            padding: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Suivi de Progression Gym</h1>
+    <h1><i class="fas fa-dumbbell"></i> Suivi de Progression Gym</h1>
     
     <div class="tabs">
-        <button class="tab active" onclick="openTab(event, 'addEntry')">Ajouter</button>
-        <button class="tab" onclick="openTab(event, 'viewProgress')">Progression</button>
-        <button class="tab" onclick="openTab(event, 'manageExercises')">Exercices</button>
+        <button class="tab active" onclick="openTab(event, 'addEntry')"><i class="fas fa-plus-circle"></i> Ajouter</button>
+        <button class="tab" onclick="openTab(event, 'viewProgress')"><i class="fas fa-chart-line"></i> Progression</button>
+        <button class="tab" onclick="openTab(event, 'manageExercises')"><i class="fas fa-list-ul"></i> Exercices</button>
     </div>
     
     <div id="addEntry" class="tab-content active container">
-        <h2>Ajouter une entrée</h2>
+        <h2><i class="fas fa-plus"></i> Ajouter une entrée</h2>
+        
+        <div id="add-success" class="success-message">
+            <span><i class="fas fa-check-circle"></i> Exercice enregistré avec succès!</span>
+            <span class="close-message"><i class="fas fa-times"></i></span>
+        </div>
+        
         <form id="workout-form">
             <div class="form-group">
-                <label for="date">Date:</label>
+                <label for="date"><i class="far fa-calendar-alt"></i> Date:</label>
                 <input type="date" id="date" required>
             </div>
             
             <div class="form-group">
-                <label for="exercise">Exercice:</label>
+                <label for="exercise"><i class="fas fa-running"></i> Exercice:</label>
                 <select id="exercise" required>
                     <option value="">Sélectionnez un exercice</option>
                     <optgroup label="Poitrine">
@@ -190,34 +483,34 @@
             </div>
             
             <div class="form-group">
-                <label for="weight">Poids (lbs):</label>
+                <label for="weight"><i class="fas fa-weight-hanging"></i> Poids (lbs):</label>
                 <input type="number" id="weight" min="0" step="2.5" required>
             </div>
             
             <div class="form-group">
-                <label for="sets">Séries:</label>
+                <label for="sets"><i class="fas fa-layer-group"></i> Séries:</label>
                 <input type="number" id="sets" min="1" value="3" required>
             </div>
             
             <div class="form-group">
-                <label for="reps">Répétitions:</label>
+                <label for="reps"><i class="fas fa-redo"></i> Répétitions:</label>
                 <input type="number" id="reps" min="1" value="10" required>
             </div>
             
             <div class="form-group">
-                <label for="notes">Notes:</label>
+                <label for="notes"><i class="fas fa-sticky-note"></i> Notes:</label>
                 <input type="text" id="notes" placeholder="Notes supplémentaires...">
             </div>
             
-            <button type="submit">Enregistrer</button>
+            <button type="submit"><i class="fas fa-save"></i> Enregistrer</button>
         </form>
     </div>
     
     <div id="viewProgress" class="tab-content container">
-        <h2>Progression</h2>
+        <h2><i class="fas fa-chart-line"></i> Progression</h2>
         
         <div class="form-group">
-            <label for="exercise-filter">Sélectionner un exercice:</label>
+            <label for="exercise-filter"><i class="fas fa-filter"></i> Sélectionner un exercice:</label>
             <select id="exercise-filter">
                 <option value="">Tous les exercices</option>
                 <!-- Rempli dynamiquement -->
@@ -225,19 +518,22 @@
         </div>
         
         <div id="progress-chart" class="chart-container">
-            <div id="chart-message">Sélectionnez un exercice pour voir sa progression</div>
+            <div id="chart-message">
+                <i class="fas fa-chart-bar"></i>
+                Sélectionnez un exercice pour voir sa progression
+            </div>
         </div>
         
         <div class="table-container">
             <table id="progress-table">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Exercice</th>
-                        <th>Poids</th>
-                        <th>Séries</th>
-                        <th>Reps</th>
-                        <th>Actions</th>
+                        <th><i class="far fa-calendar-alt"></i> Date</th>
+                        <th><i class="fas fa-running"></i> Exercice</th>
+                        <th><i class="fas fa-weight-hanging"></i> Poids</th>
+                        <th><i class="fas fa-layer-group"></i> Séries</th>
+                        <th><i class="fas fa-redo"></i> Reps</th>
+                        <th><i class="fas fa-cog"></i> Actions</th>
                     </tr>
                 </thead>
                 <tbody id="progress-data">
@@ -248,15 +544,20 @@
     </div>
     
     <div id="manageExercises" class="tab-content container">
-        <h2>Gérer les exercices</h2>
+        <h2><i class="fas fa-list-ul"></i> Gérer les exercices</h2>
+        
+        <div id="exercise-success" class="success-message">
+            <span><i class="fas fa-check-circle"></i> Exercice ajouté avec succès!</span>
+            <span class="close-message"><i class="fas fa-times"></i></span>
+        </div>
         
         <div class="form-group">
-            <label for="new-exercise">Nouvel exercice:</label>
+            <label for="new-exercise"><i class="fas fa-plus-circle"></i> Nouvel exercice:</label>
             <input type="text" id="new-exercise" placeholder="Nom de l'exercice">
         </div>
         
         <div class="form-group">
-            <label for="exercise-category">Catégorie:</label>
+            <label for="exercise-category"><i class="fas fa-tag"></i> Catégorie:</label>
             <select id="exercise-category">
                 <option value="chest">Poitrine</option>
                 <option value="back">Dos</option>
@@ -268,12 +569,12 @@
             </select>
         </div>
         
-        <button id="add-exercise-btn">Ajouter exercice</button>
+        <button id="add-exercise-btn"><i class="fas fa-plus"></i> Ajouter exercice</button>
         
-        <h3>Exercices personnalisés</h3>
-        <ul id="custom-exercises">
+        <h3><i class="fas fa-clipboard-list"></i> Exercices personnalisés</h3>
+        <div id="custom-exercises-container">
             <!-- Rempli dynamiquement -->
-        </ul>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
@@ -283,11 +584,19 @@
             if (typeof Chart === 'undefined') {
                 console.error('Chart.js n\'a pas été chargé correctement');
                 document.getElementById('chart-message').innerHTML = 
-                    'Erreur: La bibliothèque de graphiques n\'a pas pu être chargée. ' +
-                    'Vérifiez votre connexion internet.';
+                    '<i class="fas fa-exclamation-triangle"></i>' +
+                    '<div>Erreur: La bibliothèque de graphiques n\'a pas pu être chargée. ' +
+                    'Vérifiez votre connexion internet.</div>';
             } else {
                 console.log('Chart.js est chargé correctement');
             }
+            
+            // Gérer les clics sur les boutons de fermeture des messages de succès
+            document.querySelectorAll('.close-message').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.parentElement.style.display = 'none';
+                });
+            });
         });
         
         // Initialisation de l'application
@@ -297,6 +606,17 @@
         
         // Définir la date d'aujourd'hui par défaut
         document.getElementById('date').valueAsDate = new Date();
+        
+        // Fonction pour afficher un message de succès
+        function showSuccessMessage(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'flex';
+            
+            // Masquer automatiquement après 3 secondes
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 3000);
+        }
         
         // Gérer le formulaire d'ajout d'exercice
         document.getElementById('workout-form').addEventListener('submit', function(e) {
@@ -317,7 +637,16 @@
             saveWorkouts();
             this.reset();
             document.getElementById('date').valueAsDate = new Date();
-            alert('Exercice enregistré avec succès!');
+            
+            // Afficher le message de succès avec animation
+            showSuccessMessage('add-success');
+            
+            // Ajouter une animation pulse au bouton
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.classList.add('pulse-animation');
+            setTimeout(() => {
+                submitBtn.classList.remove('pulse-animation');
+            }, 600);
         });
         
         // Gérer l'ajout d'exercices personnalisés
@@ -342,7 +671,15 @@
             updateExerciseList();
             document.getElementById('new-exercise').value = '';
             updateCustomExercisesList();
-            alert('Exercice ajouté avec succès!');
+            
+            // Afficher le message de succès
+            showSuccessMessage('exercise-success');
+            
+            // Animation sur le bouton
+            this.classList.add('pulse-animation');
+            setTimeout(() => {
+                this.classList.remove('pulse-animation');
+            }, 600);
         });
         
         // Navigation par onglets
@@ -372,23 +709,40 @@
             const exerciseSelect = document.getElementById('exercise');
             const exerciseFilter = document.getElementById('exercise-filter');
             
+            // Conserver les options d'exercices par défaut
+            const defaultOptions = Array.from(exerciseSelect.getElementsByTagName('optgroup'));
+            
+            // Créer une map pour stocker les groupes par catégorie
+            const groupMap = {};
+            
+            defaultOptions.forEach(group => {
+                groupMap[group.label] = group.cloneNode(true);
+            });
+            
             // Ajouter les exercices personnalisés au select d'exercices principal
             customExercises.forEach(exercise => {
-                const existingOption = Array.from(exerciseSelect.options).find(option => option.value === exercise.value);
-                if (!existingOption) {
-                    let group = Array.from(exerciseSelect.getElementsByTagName('optgroup')).find(g => g.label === getCategoryLabel(exercise.category));
-                    
-                    if (!group) {
-                        group = document.createElement('optgroup');
-                        group.label = getCategoryLabel(exercise.category);
-                        exerciseSelect.appendChild(group);
-                    }
-                    
-                    const option = document.createElement('option');
-                    option.value = exercise.value;
-                    option.textContent = exercise.name;
-                    group.appendChild(option);
+                const categoryLabel = getCategoryLabel(exercise.category);
+                
+                if (!groupMap[categoryLabel]) {
+                    groupMap[categoryLabel] = document.createElement('optgroup');
+                    groupMap[categoryLabel].label = categoryLabel;
                 }
+                
+                const option = document.createElement('option');
+                option.value = exercise.value;
+                option.textContent = exercise.name;
+                
+                // Vérifier si l'option existe déjà
+                const exists = Array.from(groupMap[categoryLabel].options).some(opt => opt.value === exercise.value);
+                if (!exists) {
+                    groupMap[categoryLabel].appendChild(option);
+                }
+            });
+            
+            // Reconstruire le select
+            exerciseSelect.innerHTML = '<option value="">Sélectionnez un exercice</option>';
+            Object.values(groupMap).forEach(group => {
+                exerciseSelect.appendChild(group);
             });
             
             // Mettre à jour le filtre d'exercices
@@ -401,7 +755,7 @@
                 let exerciseName = '';
                 
                 // Chercher dans les options du select principal
-                const option = Array.from(exerciseSelect.options).find(opt => opt.value === exerciseValue);
+                const option = Array.from(exerciseSelect.querySelectorAll('option')).find(opt => opt.value === exerciseValue);
                 if (option) {
                     exerciseName = option.textContent;
                 } else {
@@ -436,31 +790,74 @@
             return categoryLabels[category] || 'Autre';
         }
         
+        // Obtenir l'icône de catégorie
+        function getCategoryIcon(category) {
+            const categoryIcons = {
+                'chest': 'fa-khanda',
+                'back': 'fa-arrow-up',
+                'legs': 'fa-shoe-prints',
+                'shoulders': 'fa-atlas',
+                'arms': 'fa-hand-rock',
+                'abs': 'fa-stomach',
+                'other': 'fa-question'
+            };
+            
+            return categoryIcons[category] || 'fa-dumbbell';
+        }
+        
         // Mettre à jour la liste des exercices personnalisés
         function updateCustomExercisesList() {
-            const customExercisesList = document.getElementById('custom-exercises');
-            customExercisesList.innerHTML = '';
+            const customExercisesContainer = document.getElementById('custom-exercises-container');
+            
+            if (customExercises.length === 0) {
+                customExercisesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard"></i>
+                        <p>Aucun exercice personnalisé pour le moment</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            customExercisesContainer.innerHTML = '';
             
             customExercises.forEach(exercise => {
-                const li = document.createElement('li');
-                li.textContent = `${exercise.name} (${getCategoryLabel(exercise.category)})`;
-                li.style.marginBottom = '10px';
+                const categoryLabel = getCategoryLabel(exercise.category);
+                const categoryIcon = getCategoryIcon(exercise.category);
                 
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = 'Supprimer';
-                deleteBtn.className = 'delete-btn';
-                deleteBtn.style.marginLeft = '10px';
-                deleteBtn.addEventListener('click', function() {
-                    if (confirm(`Êtes-vous sûr de vouloir supprimer l'exercice "${exercise.name}" ?`)) {
-                        customExercises = customExercises.filter(e => e.id !== exercise.id);
+                const exerciseElement = document.createElement('div');
+                exerciseElement.className = 'custom-exercise-item';
+                exerciseElement.innerHTML = `
+                    <div class="exercise-info">
+                        <div class="exercise-icon">
+                            <i class="fas ${categoryIcon}"></i>
+                        </div>
+                        <div>
+                            <strong>${exercise.name}</strong>
+                            <span class="category-badge">${categoryLabel}</span>
+                        </div>
+                    </div>
+                    <div class="exercise-actions">
+                        <button class="delete-btn" data-id="${exercise.id}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                `;
+                
+                customExercisesContainer.appendChild(exerciseElement);
+            });
+            
+            // Ajouter des écouteurs d'événements pour les boutons de suppression
+            document.querySelectorAll('#custom-exercises-container .delete-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    if (confirm(`Êtes-vous sûr de vouloir supprimer cet exercice ?`)) {
+                        customExercises = customExercises.filter(e => e.id !== id);
                         saveCustomExercises();
                         updateCustomExercisesList();
                         updateExerciseList();
                     }
                 });
-                
-                li.appendChild(deleteBtn);
-                customExercisesList.appendChild(li);
             });
         }
         
@@ -481,17 +878,31 @@
             // Afficher les données dans le tableau
             progressData.innerHTML = '';
             
+            if (filteredWorkouts.length === 0) {
+                const emptyRow = document.createElement('tr');
+                emptyRow.innerHTML = `
+                    <td colspan="6" style="text-align: center; padding: 20px;">
+                        <i class="fas fa-info-circle" style="font-size: 1.5rem; color: #999; margin-bottom: 10px;"></i>
+                        <p>Aucune donnée disponible</p>
+                    </td>
+                `;
+                progressData.appendChild(emptyRow);
+                return;
+            }
+            
             filteredWorkouts.forEach(workout => {
                 const row = document.createElement('tr');
                 
                 row.innerHTML = `
                     <td>${formatDate(workout.date)}</td>
                     <td>${workout.exerciseName}</td>
-                    <td>${workout.weight}</td>
+                    <td>${workout.weight} lbs</td>
                     <td>${workout.sets}</td>
                     <td>${workout.reps}</td>
                     <td>
-                        <button class="delete-btn" data-id="${workout.id}">X</button>
+                        <button class="delete-btn" data-id="${workout.id}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
                     </td>
                 `;
                 
@@ -499,7 +910,7 @@
             });
             
             // Ajouter des écouteurs d'événements pour les boutons de suppression
-            document.querySelectorAll('.delete-btn[data-id]').forEach(button => {
+            document.querySelectorAll('#progress-data .delete-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const id = parseInt(this.getAttribute('data-id'));
                     if (confirm('Êtes-vous sûr de vouloir supprimer cette entrée ?')) {
@@ -521,7 +932,12 @@
             
             // Si aucun exercice n'est sélectionné, ne pas afficher de graphique
             if (!exerciseFilter) {
-                chartContainer.innerHTML = '<div id="chart-message">Sélectionnez un exercice pour voir sa progression</div>';
+                chartContainer.innerHTML = `
+                    <div id="chart-message">
+                        <i class="fas fa-chart-bar"></i>
+                        Sélectionnez un exercice pour voir sa progression
+                    </div>
+                `;
                 return;
             }
             
@@ -531,7 +947,22 @@
                 .sort((a, b) => new Date(a.date) - new Date(b.date));
             
             if (exerciseData.length === 0) {
-                chartContainer.innerHTML = '<div id="chart-message">Aucune donnée disponible pour cet exercice</div>';
+                chartContainer.innerHTML = `
+                    <div id="chart-message">
+                        <i class="fas fa-search"></i>
+                        Aucune donnée disponible pour cet exercice
+                    </div>
+                `;
+                return;
+            }
+            
+            if (exerciseData.length === 1) {
+                chartContainer.innerHTML = `
+                    <div id="chart-message">
+                        <i class="fas fa-info-circle"></i>
+                        Vous avez besoin d'au moins deux enregistrements pour afficher un graphique de progression
+                    </div>
+                `;
                 return;
             }
             
@@ -573,39 +1004,94 @@
                                 data: weights,
                                 borderColor: '#4CAF50',
                                 backgroundColor: 'rgba(76, 175, 80, 0.2)',
-                                tension: 0.1,
-                                fill: true
+                                tension: 0.2,
+                                fill: true,
+                                pointBackgroundColor: '#4CAF50',
+                                pointBorderColor: '#fff',
+                                pointRadius: 6,
+                                pointHoverRadius: 8
                             }]
                         },
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
+                            animation: {
+                                duration: 1000,
+                                easing: 'easeOutQuart'
+                            },
                             scales: {
                                 y: {
                                     beginAtZero: false,
+                                    grid: {
+                                        color: 'rgba(0,0,0,0.05)'
+                                    },
                                     title: {
                                         display: true,
-                                        text: 'Poids (lbs)'
+                                        text: 'Poids (lbs)',
+                                        font: {
+                                            weight: 'bold'
+                                        }
                                     }
                                 },
                                 x: {
+                                    grid: {
+                                        color: 'rgba(0,0,0,0.05)'
+                                    },
                                     title: {
                                         display: true,
-                                        text: 'Date'
+                                        text: 'Date',
+                                        font: {
+                                            weight: 'bold'
+                                        }
                                     }
                                 }
                             },
                             plugins: {
+                                legend: {
+                                    labels: {
+                                        font: {
+                                            size: 14
+                                        }
+                                    }
+                                },
                                 title: {
                                     display: true,
-                                    text: `Progression: ${document.getElementById('exercise-filter').options[document.getElementById('exercise-filter').selectedIndex].text}`
+                                    text: `Progression: ${document.getElementById('exercise-filter').options[document.getElementById('exercise-filter').selectedIndex].text}`,
+                                    font: {
+                                        size: 16,
+                                        weight: 'bold'
+                                    },
+                                    padding: {
+                                        top: 10,
+                                        bottom: 20
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(0,0,0,0.8)',
+                                    padding: 12,
+                                    titleFont: {
+                                        size: 14
+                                    },
+                                    bodyFont: {
+                                        size: 14
+                                    },
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `Poids: ${context.raw} lbs`;
+                                        }
+                                    }
                                 }
                             }
                         }
                     });
                 } catch (error) {
                     console.error("Erreur lors de la création du graphique:", error);
-                    chartContainer.innerHTML = `<div id="chart-message">Erreur lors de la création du graphique: ${error.message}</div>`;
+                    chartContainer.innerHTML = `
+                        <div id="chart-message">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Erreur lors de la création du graphique: ${error.message}
+                        </div>
+                    `;
                 }
             }, 100);
         }
@@ -635,9 +1121,11 @@
         window.addEventListener('error', function(e) {
             if (e.target.tagName === 'SCRIPT' && e.target.src.includes('chart.js')) {
                 console.error('Erreur de chargement de Chart.js');
-                document.getElementById('chart-message').innerHTML = 
-                    'Erreur: La bibliothèque de graphiques n\'a pas pu être chargée. ' +
-                    'Vérifiez votre connexion internet.';
+                document.getElementById('chart-message').innerHTML = `
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>Erreur: La bibliothèque de graphiques n\'a pas pu être chargée. 
+                    Vérifiez votre connexion internet.</div>
+                `;
             }
         }, true);
     </script>
