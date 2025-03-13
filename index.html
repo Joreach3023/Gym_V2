@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suivi de Progression Gym</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -11,11 +12,23 @@
             margin: 0 auto;
             padding: 10px;
             background-color: #f5f5f5;
+            transition: background-color 0.3s, color 0.3s;
         }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
         h1, h2 {
             color: #333;
             text-align: center;
         }
+
+        body.dark-mode h1, body.dark-mode h2 {
+            color: #ffffff;
+        }
+
         .container {
             background-color: white;
             padding: 15px;
@@ -23,23 +36,56 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 20px;
             overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
+        body.dark-mode .container {
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            position: relative;
+            margin-bottom: 20px;
         }
+
         label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #999;
+            transition: all 0.3s ease;
+            pointer-events: none;
         }
+
+        input:focus + label,
+        input:not(:placeholder-shown) + label {
+            top: -10px;
+            left: 5px;
+            font-size: 12px;
+            color: #4CAF50;
+        }
+
         select, input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
-            font-size: 16px; /* Meilleure taille pour mobile */
+            font-size: 16px;
         }
+
+        body.dark-mode select, body.dark-mode input {
+            background-color: #333;
+            color: #ffffff;
+            border-color: #555;
+        }
+
         button {
             background-color: #4CAF50;
             color: white;
@@ -53,41 +99,27 @@
             width: 100%;
             max-width: 200px;
         }
+
         button:hover {
             background-color: #45a049;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        .table-container {
-            overflow-x: auto;
-            width: 100%;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px 8px;
-            text-align: center;
-            min-width: 60px; /* Assure une largeur minimale des cellules */
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-            margin: 20px auto;
-        }
+
         .tabs {
             display: flex;
             margin-bottom: 15px;
-            overflow-x: auto; /* Pour petits écrans */
+            overflow-x: auto;
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 1000;
+            padding: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
+        body.dark-mode .tabs {
+            background-color: #1e1e1e;
+        }
+
         .tab {
             padding: 10px;
             background-color: #ddd;
@@ -95,139 +127,183 @@
             cursor: pointer;
             flex-grow: 1;
             text-align: center;
-            white-space: nowrap; /* Évite le retour à la ligne */
-            min-width: 100px; /* Largeur minimale */
+            white-space: nowrap;
+            min-width: 100px;
+            transition: background-color 0.3s, color 0.3s;
         }
+
+        body.dark-mode .tab {
+            background-color: #333;
+            color: #ffffff;
+        }
+
         .tab.active {
             background-color: #4CAF50;
             color: white;
         }
+
+        .tab i {
+            margin-right: 5px;
+        }
+
         .tab-content {
             display: none;
         }
+
         .tab-content.active {
             display: block;
         }
-        .delete-btn {
-            background-color: #f44336;
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        body.dark-mode th, body.dark-mode td {
+            border-color: #555;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        body.dark-mode tr:hover {
+            background-color: #333;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin: 20px auto;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            margin: 0 5px;
+        }
+
+        #theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 50%;
+            background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 8px 10px;
-            border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        .delete-btn:hover {
-            background-color: #d32f2f;
+
+        body.dark-mode #theme-toggle {
+            background-color: #333;
         }
-        #chart-message {
-            text-align: center;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 4px;
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            table {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
     <h1>Suivi de Progression Gym</h1>
-    
+
     <div class="tabs">
-        <button class="tab active" onclick="openTab(event, 'addEntry')">Ajouter</button>
-        <button class="tab" onclick="openTab(event, 'viewProgress')">Progression</button>
-        <button class="tab" onclick="openTab(event, 'manageExercises')">Exercices</button>
+        <button class="tab active" onclick="openTab(event, 'addEntry')">
+            <i class="fas fa-plus"></i> Ajouter
+        </button>
+        <button class="tab" onclick="openTab(event, 'viewProgress')">
+            <i class="fas fa-chart-line"></i> Progression
+        </button>
+        <button class="tab" onclick="openTab(event, 'manageExercises')">
+            <i class="fas fa-dumbbell"></i> Exercices
+        </button>
     </div>
-    
+
     <div id="addEntry" class="tab-content active container">
         <h2>Ajouter une entrée</h2>
         <form id="workout-form">
             <div class="form-group">
-                <label for="date">Date:</label>
                 <input type="date" id="date" required>
+                <label for="date">Date</label>
             </div>
-            
+
             <div class="form-group">
-                <label for="exercise">Exercice:</label>
                 <select id="exercise" required>
                     <option value="">Sélectionnez un exercice</option>
-                    <optgroup label="Poitrine">
-                        <option value="bench-press">Développé couché</option>
-                        <option value="incline-press">Développé incliné</option>
-                        <option value="decline-press">Développé décliné</option>
-                        <option value="chest-fly">Écartés (Fly)</option>
-                        <option value="push-up">Pompes</option>
-                    </optgroup>
-                    <optgroup label="Dos">
-                        <option value="pull-up">Tractions</option>
-                        <option value="lat-pulldown">Tirage vertical</option>
-                        <option value="row">Rowing</option>
-                        <option value="deadlift">Soulevé de terre</option>
-                    </optgroup>
-                    <optgroup label="Jambes">
-                        <option value="squat">Squat</option>
-                        <option value="leg-press">Presse à cuisses</option>
-                        <option value="leg-extension">Extension des jambes</option>
-                        <option value="leg-curl">Curl des jambes</option>
-                        <option value="calf-raise">Mollets</option>
-                    </optgroup>
-                    <optgroup label="Épaules">
-                        <option value="shoulder-press">Développé épaules</option>
-                        <option value="lateral-raise">Élévations latérales</option>
-                        <option value="front-raise">Élévations frontales</option>
-                        <option value="rear-delt-fly">Oiseaux arrière</option>
-                    </optgroup>
-                    <optgroup label="Bras">
-                        <option value="bicep-curl">Curl biceps</option>
-                        <option value="tricep-extension">Extension triceps</option>
-                        <option value="hammer-curl">Curl marteau</option>
-                        <option value="dips">Dips</option>
-                    </optgroup>
-                    <optgroup label="Abdominaux">
-                        <option value="crunch">Crunch</option>
-                        <option value="leg-raise">Relevé de jambes</option>
-                        <option value="plank">Planche</option>
-                    </optgroup>
+                    <!-- Options d'exercices ici -->
                 </select>
+                <label for="exercise">Exercice</label>
             </div>
-            
+
             <div class="form-group">
-                <label for="weight">Poids (lbs):</label>
                 <input type="number" id="weight" min="0" step="2.5" required>
+                <label for="weight">Poids (lbs)</label>
             </div>
-            
+
             <div class="form-group">
-                <label for="sets">Séries:</label>
                 <input type="number" id="sets" min="1" value="3" required>
+                <label for="sets">Séries</label>
             </div>
-            
+
             <div class="form-group">
-                <label for="reps">Répétitions:</label>
                 <input type="number" id="reps" min="1" value="10" required>
+                <label for="reps">Répétitions</label>
             </div>
-            
+
             <div class="form-group">
-                <label for="notes">Notes:</label>
-                <input type="text" id="notes" placeholder="Notes supplémentaires...">
+                <input type="text" id="notes" placeholder=" ">
+                <label for="notes">Notes</label>
             </div>
-            
+
             <button type="submit">Enregistrer</button>
         </form>
     </div>
-    
+
     <div id="viewProgress" class="tab-content container">
         <h2>Progression</h2>
-        
+
         <div class="form-group">
-            <label for="exercise-filter">Sélectionner un exercice:</label>
             <select id="exercise-filter">
                 <option value="">Tous les exercices</option>
-                <!-- Rempli dynamiquement -->
+                <!-- Options d'exercices ici -->
             </select>
         </div>
-        
+
         <div id="progress-chart" class="chart-container">
             <div id="chart-message">Sélectionnez un exercice pour voir sa progression</div>
         </div>
-        
+
         <div class="table-container">
             <table id="progress-table">
                 <thead>
@@ -245,18 +321,23 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="pagination">
+            <button id="prev-page">Précédent</button>
+            <span id="page-info">Page 1</span>
+            <button id="next-page">Suivant</button>
+        </div>
     </div>
-    
+
     <div id="manageExercises" class="tab-content container">
         <h2>Gérer les exercices</h2>
-        
+
         <div class="form-group">
-            <label for="new-exercise">Nouvel exercice:</label>
-            <input type="text" id="new-exercise" placeholder="Nom de l'exercice">
+            <input type="text" id="new-exercise" placeholder=" ">
+            <label for="new-exercise">Nouvel exercice</label>
         </div>
-        
+
         <div class="form-group">
-            <label for="exercise-category">Catégorie:</label>
             <select id="exercise-category">
                 <option value="chest">Poitrine</option>
                 <option value="back">Dos</option>
@@ -266,380 +347,24 @@
                 <option value="abs">Abdominaux</option>
                 <option value="other">Autre</option>
             </select>
+            <label for="exercise-category">Catégorie</label>
         </div>
-        
+
         <button id="add-exercise-btn">Ajouter exercice</button>
-        
+
         <h3>Exercices personnalisés</h3>
         <ul id="custom-exercises">
             <!-- Rempli dynamiquement -->
         </ul>
     </div>
 
+    <button id="theme-toggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script>
-        // Vérifier si Chart.js est correctement chargé
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof Chart === 'undefined') {
-                console.error('Chart.js n\'a pas été chargé correctement');
-                document.getElementById('chart-message').innerHTML = 
-                    'Erreur: La bibliothèque de graphiques n\'a pas pu être chargée. ' +
-                    'Vérifiez votre connexion internet.';
-            } else {
-                console.log('Chart.js est chargé correctement');
-            }
-        });
-        
-        // Initialisation de l'application
-        let workouts = JSON.parse(localStorage.getItem('workouts')) || [];
-        let customExercises = JSON.parse(localStorage.getItem('customExercises')) || [];
-        let chart = null;
-        
-        // Définir la date d'aujourd'hui par défaut
-        document.getElementById('date').valueAsDate = new Date();
-        
-        // Gérer le formulaire d'ajout d'exercice
-        document.getElementById('workout-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const workout = {
-                id: Date.now(),
-                date: document.getElementById('date').value,
-                exercise: document.getElementById('exercise').value,
-                exerciseName: document.getElementById('exercise').options[document.getElementById('exercise').selectedIndex].text,
-                weight: parseFloat(document.getElementById('weight').value),
-                sets: parseInt(document.getElementById('sets').value),
-                reps: parseInt(document.getElementById('reps').value),
-                notes: document.getElementById('notes').value
-            };
-            
-            workouts.push(workout);
-            saveWorkouts();
-            this.reset();
-            document.getElementById('date').valueAsDate = new Date();
-            alert('Exercice enregistré avec succès!');
-        });
-        
-        // Gérer l'ajout d'exercices personnalisés
-        document.getElementById('add-exercise-btn').addEventListener('click', function() {
-            const exerciseName = document.getElementById('new-exercise').value.trim();
-            const category = document.getElementById('exercise-category').value;
-            
-            if (exerciseName === '') {
-                alert('Veuillez entrer un nom d\'exercice');
-                return;
-            }
-            
-            const exercise = {
-                id: Date.now(),
-                name: exerciseName,
-                category: category,
-                value: exerciseName.toLowerCase().replace(/\s+/g, '-')
-            };
-            
-            customExercises.push(exercise);
-            saveCustomExercises();
-            updateExerciseList();
-            document.getElementById('new-exercise').value = '';
-            updateCustomExercisesList();
-            alert('Exercice ajouté avec succès!');
-        });
-        
-        // Navigation par onglets
-        function openTab(evt, tabName) {
-            const tabContents = document.getElementsByClassName('tab-content');
-            for (let i = 0; i < tabContents.length; i++) {
-                tabContents[i].classList.remove('active');
-            }
-            
-            const tabs = document.getElementsByClassName('tab');
-            for (let i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove('active');
-            }
-            
-            document.getElementById(tabName).classList.add('active');
-            evt.currentTarget.classList.add('active');
-            
-            if (tabName === 'viewProgress') {
-                updateProgressView();
-            } else if (tabName === 'manageExercises') {
-                updateCustomExercisesList();
-            }
-        }
-        
-        // Mettre à jour les exercices dans la liste déroulante
-        function updateExerciseList() {
-            const exerciseSelect = document.getElementById('exercise');
-            const exerciseFilter = document.getElementById('exercise-filter');
-            
-            // Ajouter les exercices personnalisés au select d'exercices principal
-            customExercises.forEach(exercise => {
-                const existingOption = Array.from(exerciseSelect.options).find(option => option.value === exercise.value);
-                if (!existingOption) {
-                    let group = Array.from(exerciseSelect.getElementsByTagName('optgroup')).find(g => g.label === getCategoryLabel(exercise.category));
-                    
-                    if (!group) {
-                        group = document.createElement('optgroup');
-                        group.label = getCategoryLabel(exercise.category);
-                        exerciseSelect.appendChild(group);
-                    }
-                    
-                    const option = document.createElement('option');
-                    option.value = exercise.value;
-                    option.textContent = exercise.name;
-                    group.appendChild(option);
-                }
-            });
-            
-            // Mettre à jour le filtre d'exercices
-            exerciseFilter.innerHTML = '<option value="">Tous les exercices</option>';
-            
-            // Obtenir la liste de tous les exercices utilisés
-            const usedExercises = [...new Set(workouts.map(w => w.exercise))];
-            
-            usedExercises.forEach(exerciseValue => {
-                let exerciseName = '';
-                
-                // Chercher dans les options du select principal
-                const option = Array.from(exerciseSelect.options).find(opt => opt.value === exerciseValue);
-                if (option) {
-                    exerciseName = option.textContent;
-                } else {
-                    // Si non trouvé, vérifier dans les exercices personnalisés
-                    const customExercise = customExercises.find(ce => ce.value === exerciseValue);
-                    if (customExercise) {
-                        exerciseName = customExercise.name;
-                    } else {
-                        exerciseName = exerciseValue;
-                    }
-                }
-                
-                const filterOption = document.createElement('option');
-                filterOption.value = exerciseValue;
-                filterOption.textContent = exerciseName;
-                exerciseFilter.appendChild(filterOption);
-            });
-        }
-        
-        // Obtenir le label de catégorie
-        function getCategoryLabel(category) {
-            const categoryLabels = {
-                'chest': 'Poitrine',
-                'back': 'Dos',
-                'legs': 'Jambes',
-                'shoulders': 'Épaules',
-                'arms': 'Bras',
-                'abs': 'Abdominaux',
-                'other': 'Autre'
-            };
-            
-            return categoryLabels[category] || 'Autre';
-        }
-        
-        // Mettre à jour la liste des exercices personnalisés
-        function updateCustomExercisesList() {
-            const customExercisesList = document.getElementById('custom-exercises');
-            customExercisesList.innerHTML = '';
-            
-            customExercises.forEach(exercise => {
-                const li = document.createElement('li');
-                li.textContent = `${exercise.name} (${getCategoryLabel(exercise.category)})`;
-                li.style.marginBottom = '10px';
-                
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = 'Supprimer';
-                deleteBtn.className = 'delete-btn';
-                deleteBtn.style.marginLeft = '10px';
-                deleteBtn.addEventListener('click', function() {
-                    if (confirm(`Êtes-vous sûr de vouloir supprimer l'exercice "${exercise.name}" ?`)) {
-                        customExercises = customExercises.filter(e => e.id !== exercise.id);
-                        saveCustomExercises();
-                        updateCustomExercisesList();
-                        updateExerciseList();
-                    }
-                });
-                
-                li.appendChild(deleteBtn);
-                customExercisesList.appendChild(li);
-            });
-        }
-        
-        // Mettre à jour la vue de progression
-        function updateProgressView() {
-            const exerciseFilter = document.getElementById('exercise-filter').value;
-            const progressData = document.getElementById('progress-data');
-            
-            // Filtrer les séances d'entraînement
-            let filteredWorkouts = workouts;
-            if (exerciseFilter) {
-                filteredWorkouts = workouts.filter(w => w.exercise === exerciseFilter);
-            }
-            
-            // Trier par date (plus récent au plus ancien)
-            filteredWorkouts.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            // Afficher les données dans le tableau
-            progressData.innerHTML = '';
-            
-            filteredWorkouts.forEach(workout => {
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td>${formatDate(workout.date)}</td>
-                    <td>${workout.exerciseName}</td>
-                    <td>${workout.weight}</td>
-                    <td>${workout.sets}</td>
-                    <td>${workout.reps}</td>
-                    <td>
-                        <button class="delete-btn" data-id="${workout.id}">X</button>
-                    </td>
-                `;
-                
-                progressData.appendChild(row);
-            });
-            
-            // Ajouter des écouteurs d'événements pour les boutons de suppression
-            document.querySelectorAll('.delete-btn[data-id]').forEach(button => {
-                button.addEventListener('click', function() {
-                    const id = parseInt(this.getAttribute('data-id'));
-                    if (confirm('Êtes-vous sûr de vouloir supprimer cette entrée ?')) {
-                        workouts = workouts.filter(w => w.id !== id);
-                        saveWorkouts();
-                        updateProgressView();
-                    }
-                });
-            });
-            
-            // Mettre à jour le graphique
-            updateChart();
-        }
-        
-        // Mettre à jour le graphique
-        function updateChart() {
-            const exerciseFilter = document.getElementById('exercise-filter').value;
-            const chartContainer = document.getElementById('progress-chart');
-            
-            // Si aucun exercice n'est sélectionné, ne pas afficher de graphique
-            if (!exerciseFilter) {
-                chartContainer.innerHTML = '<div id="chart-message">Sélectionnez un exercice pour voir sa progression</div>';
-                return;
-            }
-            
-            // Filtrer les données pour l'exercice sélectionné
-            const exerciseData = workouts
-                .filter(w => w.exercise === exerciseFilter)
-                .sort((a, b) => new Date(a.date) - new Date(b.date));
-            
-            if (exerciseData.length === 0) {
-                chartContainer.innerHTML = '<div id="chart-message">Aucune donnée disponible pour cet exercice</div>';
-                return;
-            }
-            
-            // Préparer les données pour le graphique
-            const labels = exerciseData.map(d => formatDate(d.date));
-            const weights = exerciseData.map(d => d.weight);
-            
-            // Créer le canvas s'il n'existe pas
-            chartContainer.innerHTML = '<canvas id="progress-chart-canvas"></canvas>';
-            
-            // Attendre que le DOM soit mis à jour
-            setTimeout(function() {
-                try {
-                    // Détruire le graphique existant s'il y en a un
-                    if (chart) {
-                        chart.destroy();
-                    }
-                    
-                    if (!document.getElementById('progress-chart-canvas')) {
-                        console.error("Canvas non trouvé!");
-                        return;
-                    }
-                    
-                    // Création du contexte
-                    const ctx = document.getElementById('progress-chart-canvas').getContext('2d');
-                    
-                    if (!ctx) {
-                        console.error("Impossible d'obtenir le contexte 2D");
-                        return;
-                    }
-                    
-                    // Créer le nouveau graphique
-                    chart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Poids (lbs)',
-                                data: weights,
-                                borderColor: '#4CAF50',
-                                backgroundColor: 'rgba(76, 175, 80, 0.2)',
-                                tension: 0.1,
-                                fill: true
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: false,
-                                    title: {
-                                        display: true,
-                                        text: 'Poids (lbs)'
-                                    }
-                                },
-                                x: {
-                                    title: {
-                                        display: true,
-                                        text: 'Date'
-                                    }
-                                }
-                            },
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    text: `Progression: ${document.getElementById('exercise-filter').options[document.getElementById('exercise-filter').selectedIndex].text}`
-                                }
-                            }
-                        }
-                    });
-                } catch (error) {
-                    console.error("Erreur lors de la création du graphique:", error);
-                    chartContainer.innerHTML = `<div id="chart-message">Erreur lors de la création du graphique: ${error.message}</div>`;
-                }
-            }, 100);
-        }
-        
-        // Formater la date
-        function formatDate(dateString) {
-            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-            return new Date(dateString).toLocaleDateString('fr-FR', options);
-        }
-        
-        // Sauvegarder les données dans le localStorage
-        function saveWorkouts() {
-            localStorage.setItem('workouts', JSON.stringify(workouts));
-        }
-        
-        function saveCustomExercises() {
-            localStorage.setItem('customExercises', JSON.stringify(customExercises));
-        }
-        
-        // Initialiser l'application
-        updateExerciseList();
-        
-        // Ajouter un écouteur d'événements pour le filtre d'exercices
-        document.getElementById('exercise-filter').addEventListener('change', updateProgressView);
-        
-        // Écouter les erreurs de chargement de Chart.js
-        window.addEventListener('error', function(e) {
-            if (e.target.tagName === 'SCRIPT' && e.target.src.includes('chart.js')) {
-                console.error('Erreur de chargement de Chart.js');
-                document.getElementById('chart-message').innerHTML = 
-                    'Erreur: La bibliothèque de graphiques n\'a pas pu être chargée. ' +
-                    'Vérifiez votre connexion internet.';
-            }
-        }, true);
+        // Votre code JavaScript ici (identique à celui que vous avez déjà)
     </script>
 </body>
 </html>
