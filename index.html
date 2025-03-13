@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suivi de Progression Gym</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,23 +11,11 @@
             margin: 0 auto;
             padding: 10px;
             background-color: #f5f5f5;
-            transition: background-color 0.3s, color 0.3s;
         }
-
-        body.dark-mode {
-            background-color: #121212;
-            color: #ffffff;
-        }
-
         h1, h2 {
             color: #333;
             text-align: center;
         }
-
-        body.dark-mode h1, body.dark-mode h2 {
-            color: #ffffff;
-        }
-
         .container {
             background-color: white;
             padding: 15px;
@@ -36,56 +23,23 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 20px;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        body.dark-mode .container {
-            background-color: #1e1e1e;
-            color: #ffffff;
-        }
-
-        .container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
         .form-group {
-            position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-
         label {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            color: #999;
-            transition: all 0.3s ease;
-            pointer-events: none;
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
-
-        input:focus + label,
-        input:not(:placeholder-shown) + label {
-            top: -10px;
-            left: 5px;
-            font-size: 12px;
-            color: #4CAF50;
-        }
-
         select, input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
-            font-size: 16px;
+            font-size: 16px; /* Meilleure taille pour mobile */
         }
-
-        body.dark-mode select, body.dark-mode input {
-            background-color: #333;
-            color: #ffffff;
-            border-color: #555;
-        }
-
         button {
             background-color: #4CAF50;
             color: white;
@@ -99,27 +53,41 @@
             width: 100%;
             max-width: 200px;
         }
-
         button:hover {
             background-color: #45a049;
         }
-
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .table-container {
+            overflow-x: auto;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px 8px;
+            text-align: center;
+            min-width: 60px; /* Assure une largeur minimale des cellules */
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin: 20px auto;
+        }
         .tabs {
             display: flex;
             margin-bottom: 15px;
-            overflow-x: auto;
-            position: sticky;
-            top: 0;
-            background-color: white;
-            z-index: 1000;
-            padding: 10px 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow-x: auto; /* Pour petits écrans */
         }
-
-        body.dark-mode .tabs {
-            background-color: #1e1e1e;
-        }
-
         .tab {
             padding: 10px;
             background-color: #ddd;
@@ -127,183 +95,139 @@
             cursor: pointer;
             flex-grow: 1;
             text-align: center;
-            white-space: nowrap;
-            min-width: 100px;
-            transition: background-color 0.3s, color 0.3s;
+            white-space: nowrap; /* Évite le retour à la ligne */
+            min-width: 100px; /* Largeur minimale */
         }
-
-        body.dark-mode .tab {
-            background-color: #333;
-            color: #ffffff;
-        }
-
         .tab.active {
             background-color: #4CAF50;
             color: white;
         }
-
-        .tab i {
-            margin-right: 5px;
-        }
-
         .tab-content {
             display: none;
         }
-
         .tab-content.active {
             display: block;
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-
-        body.dark-mode th, body.dark-mode td {
-            border-color: #555;
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        body.dark-mode tr:hover {
-            background-color: #333;
-        }
-
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-            margin: 20px auto;
-        }
-
-        .pagination {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .pagination button {
-            margin: 0 5px;
-        }
-
-        #theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 10px 15px;
-            border-radius: 50%;
-            background-color: #4CAF50;
+        .delete-btn {
+            background-color: #f44336;
             color: white;
             border: none;
+            padding: 8px 10px;
+            border-radius: 4px;
             cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
         }
-
-        body.dark-mode #theme-toggle {
-            background-color: #333;
+        .delete-btn:hover {
+            background-color: #d32f2f;
         }
-
-        @media (max-width: 768px) {
-            .tabs {
-                flex-direction: column;
-            }
-
-            .tab {
-                width: 100%;
-                margin-bottom: 5px;
-            }
-
-            table {
-                font-size: 14px;
-            }
+        #chart-message {
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
     <h1>Suivi de Progression Gym</h1>
-
+    
     <div class="tabs">
-        <button class="tab active" onclick="openTab(event, 'addEntry')">
-            <i class="fas fa-plus"></i> Ajouter
-        </button>
-        <button class="tab" onclick="openTab(event, 'viewProgress')">
-            <i class="fas fa-chart-line"></i> Progression
-        </button>
-        <button class="tab" onclick="openTab(event, 'manageExercises')">
-            <i class="fas fa-dumbbell"></i> Exercices
-        </button>
+        <button class="tab active" onclick="openTab(event, 'addEntry')">Ajouter</button>
+        <button class="tab" onclick="openTab(event, 'viewProgress')">Progression</button>
+        <button class="tab" onclick="openTab(event, 'manageExercises')">Exercices</button>
     </div>
-
+    
     <div id="addEntry" class="tab-content active container">
         <h2>Ajouter une entrée</h2>
         <form id="workout-form">
             <div class="form-group">
+                <label for="date">Date:</label>
                 <input type="date" id="date" required>
-                <label for="date">Date</label>
             </div>
-
+            
             <div class="form-group">
+                <label for="exercise">Exercice:</label>
                 <select id="exercise" required>
                     <option value="">Sélectionnez un exercice</option>
-                    <!-- Options d'exercices ici -->
+                    <optgroup label="Poitrine">
+                        <option value="bench-press">Développé couché</option>
+                        <option value="incline-press">Développé incliné</option>
+                        <option value="decline-press">Développé décliné</option>
+                        <option value="chest-fly">Écartés (Fly)</option>
+                        <option value="push-up">Pompes</option>
+                    </optgroup>
+                    <optgroup label="Dos">
+                        <option value="pull-up">Tractions</option>
+                        <option value="lat-pulldown">Tirage vertical</option>
+                        <option value="row">Rowing</option>
+                        <option value="deadlift">Soulevé de terre</option>
+                    </optgroup>
+                    <optgroup label="Jambes">
+                        <option value="squat">Squat</option>
+                        <option value="leg-press">Presse à cuisses</option>
+                        <option value="leg-extension">Extension des jambes</option>
+                        <option value="leg-curl">Curl des jambes</option>
+                        <option value="calf-raise">Mollets</option>
+                    </optgroup>
+                    <optgroup label="Épaules">
+                        <option value="shoulder-press">Développé épaules</option>
+                        <option value="lateral-raise">Élévations latérales</option>
+                        <option value="front-raise">Élévations frontales</option>
+                        <option value="rear-delt-fly">Oiseaux arrière</option>
+                    </optgroup>
+                    <optgroup label="Bras">
+                        <option value="bicep-curl">Curl biceps</option>
+                        <option value="tricep-extension">Extension triceps</option>
+                        <option value="hammer-curl">Curl marteau</option>
+                        <option value="dips">Dips</option>
+                    </optgroup>
+                    <optgroup label="Abdominaux">
+                        <option value="crunch">Crunch</option>
+                        <option value="leg-raise">Relevé de jambes</option>
+                        <option value="plank">Planche</option>
+                    </optgroup>
                 </select>
-                <label for="exercise">Exercice</label>
             </div>
-
+            
             <div class="form-group">
+                <label for="weight">Poids (lbs):</label>
                 <input type="number" id="weight" min="0" step="2.5" required>
-                <label for="weight">Poids (lbs)</label>
             </div>
-
+            
             <div class="form-group">
+                <label for="sets">Séries:</label>
                 <input type="number" id="sets" min="1" value="3" required>
-                <label for="sets">Séries</label>
             </div>
-
+            
             <div class="form-group">
+                <label for="reps">Répétitions:</label>
                 <input type="number" id="reps" min="1" value="10" required>
-                <label for="reps">Répétitions</label>
             </div>
-
+            
             <div class="form-group">
-                <input type="text" id="notes" placeholder=" ">
-                <label for="notes">Notes</label>
+                <label for="notes">Notes:</label>
+                <input type="text" id="notes" placeholder="Notes supplémentaires...">
             </div>
-
+            
             <button type="submit">Enregistrer</button>
         </form>
     </div>
-
+    
     <div id="viewProgress" class="tab-content container">
         <h2>Progression</h2>
-
+        
         <div class="form-group">
+            <label for="exercise-filter">Sélectionner un exercice:</label>
             <select id="exercise-filter">
                 <option value="">Tous les exercices</option>
-                <!-- Options d'exercices ici -->
+                <!-- Rempli dynamiquement -->
             </select>
         </div>
-
+        
         <div id="progress-chart" class="chart-container">
             <div id="chart-message">Sélectionnez un exercice pour voir sa progression</div>
         </div>
-
+        
         <div class="table-container">
             <table id="progress-table">
                 <thead>
@@ -321,23 +245,18 @@
                 </tbody>
             </table>
         </div>
-
-        <div class="pagination">
-            <button id="prev-page">Précédent</button>
-            <span id="page-info">Page 1</span>
-            <button id="next-page">Suivant</button>
-        </div>
     </div>
-
+    
     <div id="manageExercises" class="tab-content container">
         <h2>Gérer les exercices</h2>
-
+        
         <div class="form-group">
-            <input type="text" id="new-exercise" placeholder=" ">
-            <label for="new-exercise">Nouvel exercice</label>
+            <label for="new-exercise">Nouvel exercice:</label>
+            <input type="text" id="new-exercise" placeholder="Nom de l'exercice">
         </div>
-
+        
         <div class="form-group">
+            <label for="exercise-category">Catégorie:</label>
             <select id="exercise-category">
                 <option value="chest">Poitrine</option>
                 <option value="back">Dos</option>
@@ -347,20 +266,15 @@
                 <option value="abs">Abdominaux</option>
                 <option value="other">Autre</option>
             </select>
-            <label for="exercise-category">Catégorie</label>
         </div>
-
+        
         <button id="add-exercise-btn">Ajouter exercice</button>
-
+        
         <h3>Exercices personnalisés</h3>
         <ul id="custom-exercises">
             <!-- Rempli dynamiquement -->
         </ul>
     </div>
-
-    <button id="theme-toggle">
-        <i class="fas fa-moon"></i>
-    </button>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script>
